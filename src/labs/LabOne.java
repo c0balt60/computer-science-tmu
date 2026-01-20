@@ -1,6 +1,5 @@
 package labs;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class LabOne {
@@ -101,20 +100,12 @@ public class LabOne {
 
         while (clone.length > 1) {
             var lowest = Arrays.stream(clone).min().getAsInt();
-
             // Each lowest needs to be moved down its index amount
-            System.out.println(lowest + " At: " + findIndex(arr, lowest) + " table: " + Arrays.toString(clone));
-            inversions += findIndex(arr, lowest);
-
+            inversions += findIndex(clone, lowest);
             // Remove index
             clone = Arrays.stream(clone)
                     .filter(e -> e != lowest)
-                    .peek(e -> System.out.println(e))
                     .toArray();
-
-            int[] shortened = new int[clone.length];
-            System.arraycopy(clone, 0, shortened, 0, clone.length - 1);
-            clone = shortened;
         }
 
         return inversions;
