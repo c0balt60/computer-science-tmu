@@ -1,9 +1,14 @@
+import labs.Polynomial;
+
 public class App {
     public static void main(String[] args) {
         int a = 5 * (13 / 5);
-        System.out.println(a);
+        // System.out.println(a);
 
         // evenlySpaced(4, 6, 3);
+        int[] c = { 0, 0, 0, 0 };
+        Polynomial p1 = new Polynomial(c);
+        System.out.println(p1.getDegree());
     }
 
     public static boolean evenlySpaced(int a, int b, int c) {
