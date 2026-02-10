@@ -1,21 +1,43 @@
-import labs.Polynomial;
+import quizes.Course;
+import quizes.Student;
+import quizes.Course.ClassType;
+import quizes.Course.TimeType;
 
 public class App {
     public static void main(String[] args) {
-        int a = 5 * (13 / 5);
-        // System.out.println(a);
+        // region Quiz 3
+        // Create courses: CPS383, CPS510, plus the current one and the pre-requisite
+        // one.
+        // Atleast one scheudling conflict
 
-        // evenlySpaced(4, 6, 3);
-        int[] c = { 0, 0, 0, 0 };
-        Polynomial p1 = new Polynomial(c);
-        System.out.println(p1.getDegree());
-    }
+        // Course cps383 = new Course("cps383");
+        // Course cps510 = new Course("cps510");
+        // Course cps209 = new Course("cps209");
+        // Course cps109 = new Course("cps109");
 
-    public static boolean evenlySpaced(int a, int b, int c) {
-        int l = Math.min(a, Math.min(b, c));
-        int h = Math.max(a, Math.max(b, c));
-        int m = (a + b + c) - l - h;
-        return Math.abs(l - m) == Math.abs(m - h);
+        // // Schedules
+        // cps383.SetTime(ClassType.LECTURE, TimeType.START, 8); // 8am
+        // cps383.SetTime(ClassType.LECTURE, TimeType.END, 10); // 10am
+
+        // cps510.SetTime(ClassType.LECTURE, TimeType.START, 12); // 12pm
+        // cps510.SetTime(ClassType.LECTURE, TimeType.END, 14); // 2pm
+
+        // // Conflicting time
+        // cps209.SetTime(ClassType.LECTURE, TimeType.START, 10); // 10am
+        // cps209.SetTime(ClassType.LECTURE, TimeType.END, 12); // 12am
+        // cps209.SetTime(ClassType.LAB, TimeType.START, 11); // 10am
+        // cps209.SetTime(ClassType.LAB, TimeType.END, 14); // 11am
+        // endregion
+
+        // region Quiz 4
+        // Student alex = new Student("Alex", 18);
+
+        // alex.addCourse("CPS209");
+        // alex.addCourse("CPS412");
+
+        // System.out.println(alex);
+        // endregion
+
     }
 
 }

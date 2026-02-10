@@ -24,7 +24,7 @@ public class LabTwo {
     public static void main(String[] args) {
         // Add your own tests here!
 
-        int[] a1 = { 42, 99, 17, 33 };
+        int[] a1 = { 11, 22, 33, 44, 55, 66, 77, 88, 99 };// { 42, 99, 17, 33 };
         int[] b1 = everyOther(a1);
 
         System.out.println();
@@ -47,14 +47,10 @@ public class LabTwo {
         int[] res = new int[a.length % 2 == 0 ? a.length / 2 : a.length / 2 + 1];
 
         int j = 0;
-        for (int i = 0; i < a.length; i++) {
-            if (i % 2 != 0)
-                continue;
+        for (int i = 0; i < a.length; i += 2) {
             res[j] = a[i];
             j++;
         }
-
-        System.out.println(Arrays.stream(res).toString());
 
         return res;
     }
