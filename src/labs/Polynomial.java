@@ -27,4 +27,16 @@ public class Polynomial {
     public int getCoefficient(int k) {
         return (k >= 0 && k < coeff.length) ? coeff[k] : 0;
     }
+
+    public long evaluate(int x) {
+        long ans = 0;
+        for (int i = 0; i < coeff.length; i++) {
+            ans += coeff[i] * ((i > 0) ? ((float) Math.pow(x, i)) : (1));
+        }
+        return ans;
+    }
+
+    public Polynomial add(Polynomial other) {
+
+    }
 }
