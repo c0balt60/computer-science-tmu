@@ -36,7 +36,35 @@ public class Polynomial {
         return ans;
     }
 
-    public Polynomial add(Polynomial other) {
+    @Override
+    public String toString() {
+        String str = "";
+        for (int i = coeff.length - 1; 0 <= i; i--) {
+            if (coeff[i] == 0) {
+                continue;
+            }
+            boolean isFirst = i == coeff.length - 1;
+            boolean isNeg = coeff[i] < 0;
+            String out = (isFirst ? "" : " ") + (isNeg ? "-" : isFirst ? "" : "+") + (isFirst ? "" : " ")
+                    + Math.abs(coeff[i])
+                    + "%s%s%s".formatted(i >= 1 ? "x" : "", i > 1 ? "^" : "", i > 1 ? i : "");
+            str += out;
+        }
+        if (str.length() == 0) {
+            str += "0";
+        }
+        return str;
+    }
 
+    public Polynomial add(Polynomial other) {
+        int otherLegnth = other.getDegree() + 1;
+        int largest = (otherLegnth > this.getDegree() + 1) ? otherLegnth : this.getDegree() + 1;
+        int[] merge = new int[largest];
+
+        for (int i = largest - 1; 0 <= i; i--) {
+            merge[i] = this.getCoefficient(i) + other.getCoefficient(i);
+        }
+
+        return new Polynomial(merge);
     }
 }
