@@ -2,8 +2,7 @@ package labs;
 
 import static java.lang.System.arraycopy;
 
-public class Polynomial {
-
+public class Polynomial implements Comparable<Polynomial> {
     private final int[] coeff;
 
     public Polynomial(int[] coefficients) {
@@ -24,8 +23,16 @@ public class Polynomial {
         return (coeff.length - 1 >= 0) ? coeff.length - 1 : 0;
     }
 
+    public int getCoefficient(int k, boolean padded) {
+        return (k >= 0 && k < coeff.length) ? (coeff[k] != 0 ? coeff[k] : 1) : 1;
+    }
+
     public int getCoefficient(int k) {
         return (k >= 0 && k < coeff.length) ? coeff[k] : 0;
+    }
+
+    public int[] getCoefficients() {
+        return this.coeff;
     }
 
     public long evaluate(int x) {
@@ -66,5 +73,61 @@ public class Polynomial {
         }
 
         return new Polynomial(merge);
+    }
+
+    public Polynomial multiply(Polynomial other) {
+        int[] merge = new int[this.getCoefficients().length + other.getCoefficients().length - 1];
+
+        for (int i = 0; i < this.getCoefficients().length; i++) {
+            for (int j = 0; j < other.getCoefficients().length; j++) {
+                merge[i + j] += this.getCoefficients()[i] * other.getCoefficients()[j];
+            }
+        }
+
+        return new Polynomial(merge);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (o == null || o.getClass() != getClass())
+            return false;
+
+        Polynomial other = (Polynomial) o;
+
+        if (this.getDegree() != other.getDegree()) {
+            return false;
+        }
+        for (int k = 0; k <= this.getDegree(); k++) {
+            if (this.getCoefficient(k) != other.getCoefficient(k)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int compareTo(Polynomial other) {
+
+        // Check for degree
+        if (this.getDegree() > other.getDegree())
+            return 1;
+        else if (this.getDegree() < other.getDegree()) {
+            return -1;
+        }
+        // Iterate degrees
+        for (int k = 0; k <= this.getDegree(); k++) {
+            int x = (this.getCoefficient(k));
+            int y = (other.getCoefficient(k));
+            if (x < y)
+                return 1;
+            else if (x > y) {
+                return -1;
+            }
+        }
+
+        return this.equals(other) ? 0 : 1;
     }
 }
