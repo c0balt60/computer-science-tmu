@@ -145,6 +145,69 @@ public class GamePanel extends JPanel {
         startLoop();
     }
 
+    /**
+     * Flips the dealer's hole card face-up.
+     * Called when the dealer reveals their hidden card.
+     *
+     * @param onComplete Called once the flip animation finishes
+     */
+    public void flipDealerHoleCard(Runnable onComplete) {
+        if (!dealerHand.isEmpty()) {
+            dealerHand.get(0).startFlip(true, onComplete);
+            startLoop();
+        }
+    }
+
+    /**
+     * Plays the bust animation on every card in the player's hand,
+     * then clears the hand once all cards have faded out.
+     *
+     * @param onComplete Called once all cards have finished fading
+     */
+    // public void playPlayerBust(Runnable onComplete) {
+    // if (playerHand.isEmpty()) return;
+
+    // // Stagger the bust animation across each card
+    // int[] completed = {0};
+    // for (int i = 0; i < playerHand.size(); i++) {
+    // final boolean isLast = (i == playerHand.size() - 1);
+    // playerHand.get(i).startBust(() -> {
+    // completed[0]++;
+    // if (isLast && onComplete != null) onComplete.run();
+    // });
+    // }
+    // startLoop();
+    // }
+
+    /**
+     * Plays the win pulse animation on every card in the player's hand.
+     *
+     * @param onComplete Called once all cards have finished pulsing
+     */
+    // public void playPlayerWin(Runnable onComplete) {
+    // if (playerHand.isEmpty()) return;
+
+    // int[] completed = {0};
+    // for (int i = 0; i < playerHand.size(); i++) {
+    // final boolean isLast = (i == playerHand.size() - 1);
+    // playerHand.get(i).startWin(() -> {
+    // completed[0]++;
+    // if (isLast && onComplete != null) onComplete.run();
+    // });
+    // }
+    // startLoop();
+    // }
+
+    /**
+     * Clears both hands from the table instantly.
+     * Call this at the start of a new round after animations finish.
+     */
+    public void clearHands() {
+        playerHand.clear();
+        dealerHand.clear();
+        repaint();
+    }
+
     // =================================================
     // Layout Functions
     // =================================================

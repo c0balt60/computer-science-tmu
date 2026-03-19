@@ -20,8 +20,13 @@ public class AnimatedCard {
 
     private int flipTick = 0;
     private int bustTick = 0;
+    private int glowTick = 0;
     // private boolean dealCard = true;
     private boolean revealOnFlip = false;
+    private boolean fading = false;
+
+    // Shake offsets applied each bust tick
+    private static final int[] SHAKE = { -8, 8, -6, 6, -4, 4, -2, 2, 0 };
 
     private Runnable onDealComplete;
     private Runnable onFlipComplete;
@@ -39,12 +44,20 @@ public class AnimatedCard {
         return card.getRank().getLabel();
     }
 
+    public boolean isAce() {
+        return card.isAce();
+    }
+
     public String getSuitSymbol() {
         return card.getSuitSymbol();
     }
 
     public boolean isRed() {
         return card.isRed();
+    }
+
+    public int getValue() {
+        return card.getValue();
     }
 
     // endregion
@@ -81,6 +94,52 @@ public class AnimatedCard {
         this.faceUp = faceUp;
         alpha = 1.0f;
         onDealComplete = onComplete;
+    }
+
+    /**
+     * Configures a flip animation. The card will squish to zero
+     * width, swap its face at the midpoint, then expand back out.
+     *
+     * @param revealFaceUp If true, the card shows face-up after the flip
+     * @param onComplete   Called once the flip finishes (nullable)
+     */
+    public void startFlip(boolean revealFaceUp, Runnable onComplete) {
+        this.flipTick = 8 * 2 + 1;
+        this.revealOnFlip = revealFaceUp;
+        this.onFlipComplete = onComplete;
+    }
+
+    /**
+     * Configures a bust animation — a shake followed by a fade-out.
+     *
+     * @param onComplete Called once the card has fully faded out (nullable)
+     */
+    public void startBust(Runnable onComplete) {
+        this.bustTick = SHAKE.length;
+        this.onBustComplete = onComplete;
+    }
+
+    /**
+     * Configures a fade-out animation without a preceding shake.
+     * The card's alpha drops from 1.0 to 0.0 over ~25 frames.
+     *
+     * @param onComplete Called once fully transparent (nullable)
+     */
+    public void startFade(Runnable onComplete) {
+        this.fading = true;
+        this.alpha = 1.0f;
+        this.onFadeComplete = onComplete;
+    }
+
+    /**
+     * Configures a win pulse animation — a golden glow that
+     * expands and contracts three times around the card.
+     *
+     * @param onComplete Called once the pulse finishes (nullable)
+     */
+    public void startWin(Runnable onComplete) {
+        this.glowTick = 6;
+        this.onWinComplete = onComplete;
     }
 
     // =================================================
