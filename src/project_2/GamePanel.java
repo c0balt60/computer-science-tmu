@@ -46,40 +46,6 @@ public class GamePanel extends JPanel {
     public GamePanel() {
         super();
         setLayout(null);
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                if (getWidth() > 0 && getHeight() > 0) {
-                    removeComponentListener(this);
-                    onReady();
-                }
-            }
-        });
-    }
-
-    private void onReady() {
-
-        // Create buttons
-        Card card = new Card(Rank.ACE, Suit.HEARTS);
-
-        AnimatedCard ac = new AnimatedCard(card);
-        AnimatedCard ac2 = new AnimatedCard(card);
-        AnimatedCard ac3 = new AnimatedCard(card);
-
-        AnimatedCard ac4 = new AnimatedCard(card);
-        AnimatedCard ac5 = new AnimatedCard(card);
-        AnimatedCard ac6 = new AnimatedCard(card);
-
-        GameFrame.runSequence(300,
-                () -> addPlayerCard(ac4, deckX(), deckY()),
-                () -> addPlayerCard(ac5, deckX(), deckY()),
-                () -> addPlayerCard(ac6, deckX(), deckY()));
-
-        GameFrame.runSequence(300,
-                () -> addDealerCard(ac, deckX(), deckY(), false),
-                () -> addDealerCard(ac2, deckX(), deckY(), false),
-                () -> addDealerCard(ac3, deckX(), deckY(), false));
     }
 
     /**
@@ -153,6 +119,7 @@ public class GamePanel extends JPanel {
      */
     public void flipDealerHoleCard(Runnable onComplete) {
         if (!dealerHand.isEmpty()) {
+            System.out.println("Flip card");
             dealerHand.get(0).startFlip(true, onComplete);
             startLoop();
         }

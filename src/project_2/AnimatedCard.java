@@ -159,6 +159,10 @@ public class AnimatedCard {
             tickDeal();
             active = true;
         }
+        if (flipTick > 0) {
+            tickFlip();
+            active = true;
+        }
 
         return active;
     }
@@ -173,6 +177,33 @@ public class AnimatedCard {
             if (onDealComplete != null) {
                 onDealComplete.run();
                 onDealComplete = null;
+            }
+        }
+    }
+
+    private void tickFlip() {
+        int totalTicks = 8 * 2 + 1;
+        int elapsed = totalTicks - flipTick;
+
+        if (elapsed < 8) {
+            // Phase 1 — squish
+            scale = 1.0 - (elapsed / (double) 8);
+        } else if (elapsed == 8) {
+            // Midpoint — swap face
+            faceUp = revealOnFlip;
+            scale = 0.0;
+        } else {
+            // Phase 2 — expand
+            scale = (elapsed - 8) / (double) 8;
+        }
+
+        flipTick--;
+
+        if (flipTick == 0) {
+            scale = 1.0;
+            if (onFlipComplete != null) {
+                onFlipComplete.run();
+                onFlipComplete = null;
             }
         }
     }

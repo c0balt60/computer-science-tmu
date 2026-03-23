@@ -11,6 +11,8 @@ public class Shoe {
     public Shoe(int numDecks) {
         this.decks = numDecks;
         this.totalCards = numDecks * 32;
+        build();
+        shuffle();
     }
 
     private void build() {

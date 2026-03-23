@@ -84,6 +84,7 @@ public class BlackjackGame {
      * Follows soft 17 rules (dealer hits on soft 17).
      */
     public void runDealerTurn() {
+        System.out.println("Run");
         panel.flipDealerHoleCard(() -> dealerHitLoop());
     }
 

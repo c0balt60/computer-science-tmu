@@ -21,7 +21,20 @@ public class GameFrame extends JFrame {
 
     // Class renderer
     public static void main() {
-        new GameFrame();
+        JFrame frame = new GameFrame();
+        GamePanel panel = new GamePanel();
+
+        // Add panel to frame
+        frame.add(panel);
+
+        // Scaler
+        ScaleProvider scale = new ScaleProvider(frame);
+        scale.register(panel, 0, 0, 1, 1);
+
+        // Build game
+        BlackjackGame game = new BlackjackGame(panel);
+        game.dealOpeningHand();
+        runAfter(3000, () -> game.runDealerTurn());
     }
 
     /**
@@ -35,14 +48,5 @@ public class GameFrame extends JFrame {
         setSize(1200, 600);
         setVisible(true);
         setLayout(null);
-        // getContentPane().setBackground(new Color(0, 110, 60));
-
-        // Create panel
-        GamePanel panel = new GamePanel();
-        add(panel);
-
-        // Set up scaler
-        ScaleProvider scaler = new ScaleProvider(this);
-        scaler.register(panel, 0, 0, 1, 1);
     }
 }
