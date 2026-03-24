@@ -83,6 +83,21 @@ public class ScaleProvider {
     }
 
     /**
+     * Registers a component into the ratio provider
+     *
+     * @param component Child to resize
+     * @param x         position scale
+     * @param y         position scale
+     * @param w         width scale
+     * @param h         height scale
+     * @param ratio     maps scale of width to height
+     */
+    public void register(Component component, double x, double y, double w, double h, double ratio) {
+        ratioMap.put(component, new double[] { x, y, w, h, ratio });
+        apply(component);
+    }
+
+    /**
      * Removes the component from resizing
      *
      * @param component
@@ -104,12 +119,13 @@ public class ScaleProvider {
 
         int pw = parent.getWidth();
         int ph = parent.getHeight();
+        boolean hasRatio = ratios.length >= 5;
 
         component.setBounds(
                 (int) (pw * ratios[0]),
-                (int) (ph * ratios[1]),
+                (int) ((hasRatio ? ratios[1] * ratios[4] * pw : ratios[1] * ph)),
                 (int) (pw * ratios[2]),
-                (int) (ph * ratios[3]));
+                (int) ((hasRatio ? ratios[3] * ratios[4] * pw : ratios[3] * ph)));
     }
 
     /**
