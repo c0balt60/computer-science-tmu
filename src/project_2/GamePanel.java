@@ -5,6 +5,9 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
+import javax.swing.ButtonModel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -18,6 +21,8 @@ public class GamePanel extends JPanel {
 
     private int playerTotal;
     private int dealerTotal;
+
+    private final ScaleProvider scaler;
 
     /**
      * Game-wide Timer for all card simulation.
@@ -46,6 +51,39 @@ public class GamePanel extends JPanel {
     public GamePanel() {
         super();
         setLayout(null);
+        setVisible(true);
+
+        // Create buttons
+        JButton click = createPrimaryButton("Hit", new Color(0xf0c040), Color.BLACK);
+        add(click);
+        JButton stand = createPrimaryButton("Stand", new Color(0x2d6e46), Color.WHITE);
+        add(stand);
+        JButton dbl = createPrimaryButton("Double", new Color(0x2d6e46), Color.WHITE);
+        add(dbl);
+        JButton split = createPrimaryButton("Split", new Color(0x2d6e46), Color.WHITE);
+        add(split);
+        JButton newRound = createPrimaryButton("New Round", new Color(0x5a9e72), Color.WHITE);
+        add(newRound);
+
+        JButton chip5 = createChipButton("$5", new Color(0xc0392b));
+        add(chip5);
+
+        JLabel player = createLabel("PLAYER");
+        add(player);
+
+        // Create scale
+        scaler = new ScaleProvider(this);
+
+        // Scale components
+        scaler.register(click, 0.65, .8, .09, 0.04);
+        scaler.register(stand, 0.75, .8, .09, 0.04);
+        scaler.register(dbl, 0.85, .8, .09, 0.04);
+        scaler.register(split, 0.65, .85, .09, 0.04);
+        scaler.register(newRound, 0.75, .85, .19, 0.04);
+
+        scaler.register(chip5, .04, .3, .05, .05, 1f);
+
+        scaler.register(player, .05, .5, .12, .04);
     }
 
     /**
@@ -212,6 +250,97 @@ public class GamePanel extends JPanel {
         int totalWidth = handSize * cardWidth() + (handSize - 1) * padding;
         int startX = (getWidth() - totalWidth) / 2;
         return startX + index * (cardWidth() + padding);
+    }
+
+    // =================================================
+    // Button Factory
+    // =================================================
+
+    /**
+     * Creates a styled jbutton, re-drawing it into a styled
+     * rectangular button.
+     *
+     * @param text The button label
+     * @param bg   Background fill color
+     * @param fg   Text color
+     * @return
+     */
+    private JButton createPrimaryButton(String text, Color bg, Color fg) {
+        JButton btn = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics graphics) {
+                Graphics2D g = (Graphics2D) graphics.create();
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                ButtonModel model = getModel();
+                g.setColor(
+                        (model.isPressed()) ? bg.darker() : (model.isRollover() ? bg.brighter() : bg));
+
+                g.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
+
+                // Add outline
+                if (!bg.equals(new Color(0xf0c040))) {
+                    g.setColor(new Color(0x5a9e72));
+                    g.setStroke(new BasicStroke(1.5f));
+                    g.drawRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 12, 12);
+                }
+
+                g.setColor(fg);
+                g.setFont(new Font("SansSerif", Font.BOLD, 13));
+                FontMetrics fm = g.getFontMetrics();
+                g.drawString(text, (getWidth() - fm.stringWidth(text)) / 2,
+                        (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
+                g.dispose();
+            }
+        };
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        return btn;
+    }
+
+    private JButton createChipButton(String text, Color color) {
+        JButton btn = new JButton(text) {
+            protected void paintComponent(Graphics graphics) {
+                Graphics2D g = (Graphics2D) graphics.create();
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Body
+                ButtonModel model = getModel();
+                g.setColor(
+                        model.isPressed() ? color.darker() : (model.isRollover() ? color.brighter() : color));
+                // g.setStroke(new BasicStroke(2f));
+                g.fillOval(0, 0, getWidth(), getHeight());
+
+                // Chip border
+                g.setColor(color.brighter());
+                g.setStroke(new BasicStroke(2f));
+                g.drawOval(1, 1, getWidth() - 2, getHeight() - 2);
+
+                // Label
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("SansSerif", Font.BOLD, getHeight() / 4));
+                FontMetrics fm = g.getFontMetrics();
+                g.drawString(text, (getWidth() - fm.stringWidth(text)) / 2,
+                        (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
+                g.dispose();
+            }
+        };
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        return btn;
+    }
+
+    private JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setForeground(Color.WHITE);
+        label.setFont(new Font("SansSerif", Font.BOLD, 14));
+        return label;
     }
 
     // =================================================
