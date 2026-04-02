@@ -2,8 +2,8 @@ package labs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -13,10 +13,6 @@ public class Lab8 {
         public InvalidTemperatureException(String msg) {
             super(msg);
         }
-    }
-
-    public static void main() {
-        System.out.println(file_slice("test.txt", 0, 0));
     }
 
     /**
@@ -87,36 +83,40 @@ public class Lab8 {
         if (first < 0 || last < 0 || last < first)
             throw new NegativeArraySizeException();
 
-        // long len = Files.lines(Path.of("src/labs/" + fname_in)).count();
         int size = 0;
         String d = "";
         ArrayList<String> lines = new ArrayList<>();
 
         try {
-            File f = new File("src/labs/" + fname_in);
+            // File f = new File("src/labs/" + fname_in); --> For personal testing, my lab
+            // file is nested in multiple folders
+            File f = new File(fname_in);
             Scanner sc = new Scanner(f);
             sc.useDelimiter("\n");
 
             while (sc.hasNextLine()) {
                 lines.add(sc.nextLine());
             }
+
+            sc.close();
         } catch (FileNotFoundException e) {
             return "file not found";
         }
 
-        if (first > lines.size())
+        if (first >= lines.size())
             throw new IndexOutOfBoundsException();
 
         if (last > lines.size()) {
+            size = first;
             for (String s : lines) {
-                d += s + (size > lines.size() ? "" : "\n");
+                d += s + (size >= lines.size() - 1 ? "" : "\n");
                 size++;
             }
             return d;
         }
 
-        for (String s : lines) {
-
+        for (int i = first; i <= last; i++) {
+            d += lines.get(i) + (i >= last ? "" : "\n");
         }
 
         return d;
@@ -138,7 +138,42 @@ public class Lab8 {
      */
     public static String rev_rev_file(String fname_in, String fname_out) {
 
-        return "";
+        ArrayList<String> lines = new ArrayList<>();
+
+        try {
+            // File f = new File("src/labs/" + fname_in);--> For personal testing, my lab
+            // file is nested in multiple folders
+            File f = new File(fname_in);
+            Scanner sc = new Scanner(f);
+            sc.useDelimiter("\n");
+
+            while (sc.hasNextLine()) {
+                lines.add(sc.nextLine());
+            }
+
+            sc.close();
+        } catch (FileNotFoundException e) {
+            return "ERROR: NO INPUT";
+        }
+
+        String contents = "";
+
+        // Reverse and write
+        int size = 0;
+        for (String s : lines.reversed()) {
+            StringBuilder rev = new StringBuilder(s);
+            contents += rev.reverse() + (size >= lines.size() - 1 ? "" : "\n");
+            size++;
+        }
+
+        // Write to file
+        try (FileWriter w = new FileWriter("fname_out.txt")) {
+            w.write(contents);
+        } catch (IOException e) {
+            return contents;
+        }
+
+        return contents;
     }
 
     /*
