@@ -31,10 +31,14 @@ public class GameFrame extends JFrame {
         ScaleProvider scale = new ScaleProvider(frame);
         scale.register(panel, 0, 0, 1, 1);
 
-        // Build game
+        panel.onPlayerHit = () -> {
+            System.out.println("Player hit");
+        };
+
+        // Build game handler
         BlackjackGame game = new BlackjackGame(panel);
         game.dealOpeningHand();
-        runAfter(3000, () -> game.runDealerTurn());
+        // runAfter(3000, () -> game.runDealerTurn());
     }
 
     /**
@@ -45,8 +49,13 @@ public class GameFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Blackjack");
         setIconImage(new ImageIcon("./Assets/icon.png").getImage());
-        setSize(1200, 600);
+        setSize(1200, 800);
         setVisible(true);
         setLayout(null);
     }
+
+    // =================================================
+    // Event Listeners
+    // =================================================
+
 }

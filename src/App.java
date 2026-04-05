@@ -1,12 +1,6 @@
-
-import labs.Polynomial;
-import quizes.Course;
-import quizes.Student;
-import quizes.Course.ClassType;
-import quizes.Course.TimeType;
-
 public class App {
     public static void main(String[] args) {
+
         // region Polynomial
         // int[] c6 = { 7, -5, 3 };
         // int[] c7 = { 6, 0, 0, -4 };
@@ -17,14 +11,14 @@ public class App {
         // System.out.println("Multiply: " + p1.multiply(p2));
         // System.out.println("Multiply: " + p2.multiply(p1));
 
-        int[] c1 = { -6, 99, 11, 12 };
-        int[] c2 = { 6, -99, 11, 12 };
-        int[] c3 = { 42, 10000000 };
-        Polynomial p1 = new Polynomial(c1);
-        Polynomial p2 = new Polynomial(c2);
-        Polynomial p3 = new Polynomial(c3);
-        System.out.println(p1.compareTo(p2));
-        System.out.println(p2.compareTo(p1));
+        // int[] c1 = { -6, 99, 11, 12 };
+        // int[] c2 = { 6, -99, 11, 12 };
+        // int[] c3 = { 42, 10000000 };
+        // Polynomial p1 = new Polynomial(c1);
+        // Polynomial p2 = new Polynomial(c2);
+        // Polynomial p3 = new Polynomial(c3);
+        // System.out.println(p1.compareTo(p2));
+        // System.out.println(p2.compareTo(p1));
         // endregion
 
         // region Quiz 3

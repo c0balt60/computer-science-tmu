@@ -85,7 +85,7 @@ public class BlackjackGame {
      */
     public void runDealerTurn() {
         System.out.println("Run");
-        panel.flipDealerHoleCard(() -> dealerHitLoop());
+        panel.flipDealerHoleCard(this::dealerHitLoop);
     }
 
     /**
@@ -103,7 +103,9 @@ public class BlackjackGame {
                 runAfter(500, this::dealerHitLoop);
             });
         } else {
-            System.out.println("Resolve round");
+            System.out.println("Resolve round: ");
+            System.out.println("Player Total: " + calculateTotal(playerHand));
+            System.out.println("Dealer Total: " + calculateTotal(dealerHand));
             // resolveRound();
         }
     }

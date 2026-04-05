@@ -1,18 +1,9 @@
 package project_2;
 
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
-import javax.swing.ButtonModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
-import project_2.Card.Rank;
-import project_2.Card.Suit;
+import javax.swing.*;
 
 public class GamePanel extends JPanel {
 
@@ -23,6 +14,8 @@ public class GamePanel extends JPanel {
     private int dealerTotal;
 
     private final ScaleProvider scaler;
+
+    public Runnable onPlayerHit;
 
     /**
      * Game-wide Timer for all card simulation.
@@ -53,9 +46,20 @@ public class GamePanel extends JPanel {
         setLayout(null);
         setVisible(true);
 
+        // Create scale
+        scaler = new ScaleProvider(this);
+
+        // Render ui
+        SwingUtilities.invokeLater(this::renderInterace);
+    }
+
+    /**
+     * Render the misc buttons such as Hit, Double, ...
+     */
+    private void renderInterace() {
         // Create buttons
-        JButton click = createPrimaryButton("Hit", new Color(0xf0c040), Color.BLACK);
-        add(click);
+        JButton hit = createPrimaryButton("Hit", new Color(0xf0c040), Color.BLACK);
+        add(hit);
         JButton stand = createPrimaryButton("Stand", new Color(0x2d6e46), Color.WHITE);
         add(stand);
         JButton dbl = createPrimaryButton("Double", new Color(0x2d6e46), Color.WHITE);
@@ -65,25 +69,38 @@ public class GamePanel extends JPanel {
         JButton newRound = createPrimaryButton("New Round", new Color(0x5a9e72), Color.WHITE);
         add(newRound);
 
+        // Create chip buttons
         JButton chip5 = createChipButton("$5", new Color(0xc0392b));
         add(chip5);
+        JButton chip25 = createChipButton("$25", new Color(0x27ae60));
+        add(chip25);
+        JButton chip100 = createChipButton("$100", new Color(0x2980b9));
+        add(chip100);
 
+        // Create labels
         JLabel player = createLabel("PLAYER");
         add(player);
 
-        // Create scale
-        scaler = new ScaleProvider(this);
-
-        // Scale components
-        scaler.register(click, 0.65, .8, .09, 0.04);
+        // Scale Buttons
+        scaler.register(hit, 0.65, .8, .09, 0.04);
         scaler.register(stand, 0.75, .8, .09, 0.04);
         scaler.register(dbl, 0.85, .8, .09, 0.04);
         scaler.register(split, 0.65, .85, .09, 0.04);
         scaler.register(newRound, 0.75, .85, .19, 0.04);
 
-        scaler.register(chip5, .04, .3, .05, .05, 1f);
+        // Scale chip buttons
+        scaler.register(chip5, .075, .6, .05, .05, 1f);
+        scaler.register(chip25, .14, .6, .05, .05, 1f);
+        scaler.register(chip100, .2, .6, .05, .05, 1f);
 
+        // Scale labels
         scaler.register(player, .05, .5, .12, .04);
+
+        // Write button listeners
+        hit.addActionListener(e -> {
+            System.out.println("Hit");
+            onPlayerHit.run();
+        });
     }
 
     /**
@@ -122,6 +139,9 @@ public class GamePanel extends JPanel {
         repaint();
     }
 
+    /**
+     * Begins the simulation loop in its not active
+     */
     public void startLoop() {
         if (!animation.isRunning())
             animation.start();
@@ -131,6 +151,17 @@ public class GamePanel extends JPanel {
     // Game Functions
     // =================================================
 
+    public void addCard(AnimatedCard card) {
+        // scaler.register(card, ABORT, playerTotal, WIDTH, HEIGHT);
+    }
+
+    /**
+     * Creates an animated player card
+     *
+     * @param card AnimatedCard to animate
+     * @param fX   Start position x (Scale)
+     * @param fY   Start position y (Scale)
+     */
     public void addPlayerCard(AnimatedCard card, double fX, double fY) {
         playerHand.add(card);
         int index = playerHand.size() - 1;
@@ -140,6 +171,14 @@ public class GamePanel extends JPanel {
         startLoop();
     }
 
+    /**
+     * Creates an animated dealer card, with optional faceUp
+     *
+     * @param card   AnimatedCard to animate
+     * @param fX     Start position x
+     * @param fY     Start position y
+     * @param faceUp Start with faceUp
+     */
     public void addDealerCard(AnimatedCard card, double fX, double fY, boolean faceUp) {
         dealerHand.add(card);
         int index = dealerHand.size() - 1;
@@ -218,7 +257,7 @@ public class GamePanel extends JPanel {
     // =================================================
 
     public int cardWidth() {
-        return (int) (getWidth() * 0.08);
+        return (int) (getWidth() * 0.06);
     }
 
     public int cardHeight() {
@@ -303,6 +342,7 @@ public class GamePanel extends JPanel {
 
     private JButton createChipButton(String text, Color color) {
         JButton btn = new JButton(text) {
+            @Override
             protected void paintComponent(Graphics graphics) {
                 Graphics2D g = (Graphics2D) graphics.create();
                 g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

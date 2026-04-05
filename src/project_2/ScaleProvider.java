@@ -123,7 +123,7 @@ public class ScaleProvider {
 
         component.setBounds(
                 (int) (pw * ratios[0]),
-                (int) ((hasRatio ? ratios[1] * ratios[4] * pw : ratios[1] * ph)),
+                (int) (ph * ratios[1]),
                 (int) (pw * ratios[2]),
                 (int) ((hasRatio ? ratios[3] * ratios[4] * pw : ratios[3] * ph)));
     }
