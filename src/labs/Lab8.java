@@ -88,9 +88,9 @@ public class Lab8 {
         ArrayList<String> lines = new ArrayList<>();
 
         try {
-            // File f = new File("src/labs/" + fname_in); --> For personal testing, my lab
+            File f = new File("src/labs/" + fname_in); // --> For personal testing, my lab
             // file is nested in multiple folders
-            File f = new File(fname_in);
+            // File f = new File(fname_in);
             Scanner sc = new Scanner(f);
             sc.useDelimiter("\n");
 
@@ -137,13 +137,12 @@ public class Lab8 {
      * reversed contents as a String as usual.
      */
     public static String rev_rev_file(String fname_in, String fname_out) {
-
         ArrayList<String> lines = new ArrayList<>();
 
         try {
-            // File f = new File("src/labs/" + fname_in);--> For personal testing, my lab
+            File f = new File("src/labs/" + fname_in); // --> For personal testing, my lab
             // file is nested in multiple folders
-            File f = new File(fname_in);
+            // File f = new File(fname_in);
             Scanner sc = new Scanner(f);
             sc.useDelimiter("\n");
 
@@ -153,6 +152,8 @@ public class Lab8 {
 
             sc.close();
         } catch (FileNotFoundException e) {
+            return "ERROR: NO INPUT";
+        } catch (NullPointerException e) {
             return "ERROR: NO INPUT";
         }
 
