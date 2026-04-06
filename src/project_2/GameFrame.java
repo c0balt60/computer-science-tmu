@@ -1,5 +1,9 @@
 package project_2;
 
+import java.awt.Cursor;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -26,19 +30,47 @@ public class GameFrame extends JFrame {
 
         // Add panel to frame
         frame.add(panel);
+        panel.addMouseListener(new MouseListener() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                panel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                panel.setCursor(Cursor.getDefaultCursor());
+            }
+        });
 
         // Scaler
         ScaleProvider scale = new ScaleProvider(frame);
         scale.register(panel, 0, 0, 1, 1);
 
-        panel.onPlayerHit = () -> {
-            System.out.println("Player hit");
-        };
-
         // Build game handler
         BlackjackGame game = new BlackjackGame(panel);
         game.dealOpeningHand();
         // runAfter(3000, () -> game.runDealerTurn());
+
+        panel.onPlayerHit = () -> {
+            System.out.println("Player hit");
+            game.dealToPlayer();
+            runAfter(500, () -> game.runDealerTurn());
+        };
+        panel.onPlayerStand = () -> {
+            game.runDealerTurn();
+        };
     }
 
     /**
@@ -53,9 +85,4 @@ public class GameFrame extends JFrame {
         setVisible(true);
         setLayout(null);
     }
-
-    // =================================================
-    // Event Listeners
-    // =================================================
-
 }

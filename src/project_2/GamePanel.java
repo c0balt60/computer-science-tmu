@@ -2,6 +2,8 @@ package project_2;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 
@@ -15,7 +17,29 @@ public class GamePanel extends JPanel {
 
     private final ScaleProvider scaler;
 
+    private boolean buttonState = true;
+
+    public Map<String, JLabel> labels = new HashMap<>();
+
+    /**
+     * Player pressed New Round button
+     */
+    public Runnable onPlayerReset;
+
+    /**
+     * Player pressed Hit
+     */
     public Runnable onPlayerHit;
+
+    /**
+     * Player pressed Double
+     */
+    public Runnable onPlayerDouble;
+
+    /**
+     * Player pressed Stand
+     */
+    public Runnable onPlayerStand;
 
     /**
      * Game-wide Timer for all card simulation.
@@ -64,8 +88,9 @@ public class GamePanel extends JPanel {
         add(stand);
         JButton dbl = createPrimaryButton("Double", new Color(0x2d6e46), Color.WHITE);
         add(dbl);
-        JButton split = createPrimaryButton("Split", new Color(0x2d6e46), Color.WHITE);
-        add(split);
+        // JButton split = createPrimaryButton("Split", new Color(0x2d6e46),
+        // Color.WHITE);
+        // add(split);
         JButton newRound = createPrimaryButton("New Round", new Color(0x5a9e72), Color.WHITE);
         add(newRound);
 
@@ -80,13 +105,17 @@ public class GamePanel extends JPanel {
         // Create labels
         JLabel player = createLabel("PLAYER");
         add(player);
+        JLabel playerPoints = createLabel("Player Points");
+        add(playerPoints);
+        JLabel dealerPoints = createLabel("Dealer Points");
+        add(dealerPoints);
 
         // Scale Buttons
         scaler.register(hit, 0.65, .8, .09, 0.04);
         scaler.register(stand, 0.75, .8, .09, 0.04);
         scaler.register(dbl, 0.85, .8, .09, 0.04);
-        scaler.register(split, 0.65, .85, .09, 0.04);
-        scaler.register(newRound, 0.75, .85, .19, 0.04);
+        // scaler.register(split, 0.65, .85, .09, 0.04);
+        scaler.register(newRound, 0.65, .85, .29, 0.04);
 
         // Scale chip buttons
         scaler.register(chip5, .075, .6, .05, .05, 1f);
@@ -96,10 +125,32 @@ public class GamePanel extends JPanel {
         // Scale labels
         scaler.register(player, .05, .5, .12, .04);
 
+        // Write labels
+        labels.put("PlayerPoints", player);
+        labels.put("DealerPoints", dealerPoints);
+
         // Write button listeners
         hit.addActionListener(e -> {
+            if (!buttonState)
+                return;
             System.out.println("Hit");
             onPlayerHit.run();
+        });
+        stand.addActionListener(e -> {
+            if (!buttonState)
+                return;
+            System.out.println("Stand");
+            onPlayerStand.run();
+        });
+        dbl.addActionListener(e -> {
+            if (!buttonState)
+                return;
+            System.out.println("Double");
+            onPlayerDouble.run();
+        });
+        newRound.addActionListener(e -> {
+            System.out.println("New Round");
+            onPlayerDouble.run();
         });
     }
 
@@ -137,6 +188,18 @@ public class GamePanel extends JPanel {
         this.playerTotal = player;
         this.dealerTotal = dealer;
         repaint();
+    }
+
+    /**
+     * Sets the given Label's text
+     *
+     * @param label the label on screen to modify text
+     * @param text  the text to be set
+     */
+    public void setLabelText(String label, String text) {
+        if (!labels.containsKey(label))
+            return;
+        labels.get(label).setText(text);
     }
 
     /**

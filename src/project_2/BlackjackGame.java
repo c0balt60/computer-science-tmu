@@ -1,5 +1,6 @@
 package project_2;
 
+import java.lang.management.PlatformLoggingMXBean;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class BlackjackGame {
 
     private ArrayList<AnimatedCard> playerHand = new ArrayList<>();
     private ArrayList<AnimatedCard> dealerHand = new ArrayList<>();
+
+    public Runnable gameEnd;
 
     /**
      * Creates a new BlackjackGame with a 6-deck shoe.
@@ -70,7 +73,6 @@ public class BlackjackGame {
 
     /**
      * Deals one card to the dealer and adds it to their hand.
-     * Used during dealer resolution after the player stands.
      */
     public void dealToDealer() {
         AnimatedCard ac = shoe.dealAnimated();
@@ -96,7 +98,7 @@ public class BlackjackGame {
         int total = calculateTotal(dealerHand);
         boolean soft17 = (total == 17) && isSoft(dealerHand);
 
-        if (total < 17 || soft17) {
+        if ((total < 17 || soft17) && (!isBust(playerHand))) {
             runAfter(600, () -> {
                 dealToDealer();
                 // Wait for deal animation then check again
@@ -107,6 +109,42 @@ public class BlackjackGame {
             System.out.println("Player Total: " + calculateTotal(playerHand));
             System.out.println("Dealer Total: " + calculateTotal(dealerHand));
             // resolveRound();
+
+            // Get winner
+            int playerTotal = calculateTotal(playerHand);
+            int dealerTotal = calculateTotal(dealerHand);
+
+            String winner = "none";
+
+            // Print
+            // if (playerTotal > 21 && dealerTotal > 21) {
+            // System.out.println("Draw");
+            // } else if (playerTotal <= 21) {
+            // System.out.println("Player won");
+            // } else if (dealerTotal <= 21) {
+            // System.out.println("Dealer won");
+            // }
+
+            if (dealerTotal > playerTotal && dealerTotal <= 21)
+                winner = "Dealer";
+
+            if (playerTotal > dealerTotal && playerTotal <= 21)
+                winner = "Player";
+
+            if (playerTotal > 21 && dealerTotal <= 21)
+                winner = "Dealer";
+            if (dealerTotal > 21 && playerTotal <= 21)
+                winner = "Player";
+
+            if (playerTotal == dealerTotal || playerTotal > 21 && dealerTotal > 21)
+                winner = "Draw";
+
+            System.out.println("Winner: " + winner);
+
+            runAfter(3000, () -> {
+                panel.clearHands();
+                dealOpeningHand();
+            });
         }
     }
 
